@@ -3,11 +3,13 @@ import { useAsync } from 'react-async'
 
 type Props = {};
 
-function fetchData(): Promise<string> {
+// 1. have to be defined outside the component
+// 2. have to define the props with type `any` to make it compilable?!
+async function fetchData({ name }: { name: string }): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     setTimeout(() => {
       if (Date.now() % 2 === 0) {
-        resolve('abc');
+        resolve(`Hello, ${name}`);
       } else {
         reject('custom-error')
       }
@@ -16,7 +18,7 @@ function fetchData(): Promise<string> {
 }
 
 export const Hello: FC<Props> = ({}) => {
-  const { data, error, isPending } = useAsync({ promiseFn: fetchData })
+  const { data, error, isPending } = useAsync(fetchData, { name: 'why?' })
   return <div>
     <h1>Hello ReactAsync</h1>
     <div>
